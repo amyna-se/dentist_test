@@ -1,0 +1,115 @@
+{
+  "common": {
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "search": "Search",
+    "export": "Export"
+  },
+  "nav": {
+    "about": "About",
+    "contact": "Contact",
+    "shop": "Shop",
+    "support": "Support Us",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "signIn": "Sign In",
+    "logout": "Logout"
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back!",
+    "createAccount": "Create Account",
+    "adminAccess": "Admin Access",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "noAccount": "Don't have an account? Sign up",
+    "haveAccount": "Already have an account? Sign in",
+    "adminLogin": "Admin Login",
+    "backToUser": "Back to User Login",
+    "continueWith": "Or continue with"
+  },
+  "settings": {
+    "title": "User Settings",
+    "language": {
+      "title": "Language",
+      "select": "Select Language"
+    },
+    "theme": {
+      "title": "Theme",
+      "light": "Light Mode",
+      "dark": "Dark Mode"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "toggle": "Enable Notifications"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {{name}}! 👋",
+    "continueJourney": "Continue your learning journey",
+    "showCourseEditor": "Course Editor",
+    "hideCourseEditor": "Hide Editor",
+    "stats": {
+      "totalXP": "Total XP",
+      "coursesCompleted": "Courses Completed",
+      "currentStreak": "Current Streak",
+      "days": "days"
+    },
+    "courses": "Your Courses",
+    "complete": "Complete",
+    "courseEditor": {
+      "title": "Course Editor",
+      "addCourse": "Add Course",
+      "editCourse": "Edit Course",
+      "courseTitle": "Course Title",
+      "description": "Description",
+      "questions": "Questions",
+      "addQuestion": "Add Question",
+      "saveChanges": "Save Changes"
+    }
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "exportData": "Export User Data",
+    "metrics": {
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Users",
+      "averageScore": "Average Score",
+      "completedCourses": "Completed Courses"
+    },
+    "userTable": {
+      "title": "User Data",
+      "searchUsers": "Search users...",
+      "export": "Export",
+      "columns": {
+        "user": "User",
+        "role": "Role",
+        "location": "Location",
+        "progress": "Progress",
+        "lastActive": "Last Active"
+      }
+    }
+  },
+  "quiz": {
+    "progress": "Question {{current}} of {{total}}",
+    "score": "Score",
+    "submit": "Submit Answer",
+    "next": "Next Question",
+    "complete": "Complete Quiz",
+    "correct": "Correct! 🎉",
+    "incorrect": "Not quite right 🤔",
+    "correctAnswer": "The correct answer was:",
+    "backToDashboard": "Back to Dashboard"
+  }
+}

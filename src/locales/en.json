@@ -1,0 +1,19 @@
+{
+  "auth": {
+    "welcomeBack": "Welcome Back!",
+    "createAccount": "Create Account",
+    "signInContinue": "Sign in to continue your learning journey",
+    "joinToLearn": "Join us to start learning",
+    "name": "Name",
+    "fullName": "Full Name",
+    "emailAddress": "Email address",
+    "password": "Password",
+    "adminLogin": "Admin Login",
+    "signIn": "Sign In",
+    "noAccount": "Don't have an account? Sign up",
+    "haveAccount": "Already have an account? Sign in",
+    "continueWith": "Or continue with",
+    "invalidAdminCredentials": "Invalid admin credentials",
+    "generalError": "An error occurred. Please try again."
+  }
+}

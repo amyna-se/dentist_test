@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://neurostep.se/sitemap.xml
+
+# Disallow admin and private routes
+Disallow: /admin/*
+Disallow: /dashboard/*
+Disallow: /auth/*

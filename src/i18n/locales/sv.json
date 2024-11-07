@@ -1,0 +1,115 @@
+{
+  "common": {
+    "back": "Tillbaka",
+    "next": "Nästa",
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "loading": "Laddar...",
+    "error": "Fel",
+    "success": "Klart",
+    "close": "Stäng",
+    "edit": "Redigera",
+    "delete": "Ta bort",
+    "add": "Lägg till",
+    "search": "Sök",
+    "export": "Exportera"
+  },
+  "nav": {
+    "about": "Om oss",
+    "contact": "Kontakt",
+    "shop": "Butik",
+    "support": "Stöd oss",
+    "dashboard": "Kontrollpanel",
+    "admin": "Admin",
+    "signIn": "Logga in",
+    "logout": "Logga ut"
+  },
+  "auth": {
+    "welcomeBack": "Välkommen tillbaka!",
+    "createAccount": "Skapa konto",
+    "adminAccess": "Administratörsåtkomst",
+    "email": "E-post",
+    "password": "Lösenord",
+    "name": "Namn",
+    "signIn": "Logga in",
+    "signUp": "Registrera",
+    "noAccount": "Har du inget konto? Registrera dig",
+    "haveAccount": "Har du redan ett konto? Logga in",
+    "adminLogin": "Administratörsinloggning",
+    "backToUser": "Tillbaka till användarinloggning",
+    "continueWith": "Eller fortsätt med"
+  },
+  "settings": {
+    "title": "Användarinställningar",
+    "language": {
+      "title": "Språk",
+      "select": "Välj språk"
+    },
+    "theme": {
+      "title": "Tema",
+      "light": "Ljust läge",
+      "dark": "Mörkt läge"
+    },
+    "notifications": {
+      "title": "Aviseringar",
+      "toggle": "Aktivera aviseringar"
+    }
+  },
+  "dashboard": {
+    "welcome": "Välkommen tillbaka, {{name}}! 👋",
+    "continueJourney": "Fortsätt din läranderesa",
+    "showCourseEditor": "Kursredigerare",
+    "hideCourseEditor": "Dölj redigerare",
+    "stats": {
+      "totalXP": "Total XP",
+      "coursesCompleted": "Avslutade kurser",
+      "currentStreak": "Nuvarande svit",
+      "days": "dagar"
+    },
+    "courses": "Dina kurser",
+    "complete": "Klart",
+    "courseEditor": {
+      "title": "Kursredigerare",
+      "addCourse": "Lägg till kurs",
+      "editCourse": "Redigera kurs",
+      "courseTitle": "Kurstitel",
+      "description": "Beskrivning",
+      "questions": "Frågor",
+      "addQuestion": "Lägg till fråga",
+      "saveChanges": "Spara ändringar"
+    }
+  },
+  "admin": {
+    "dashboard": "Administratörspanel",
+    "exportData": "Exportera användardata",
+    "metrics": {
+      "totalUsers": "Totalt antal användare",
+      "activeUsers": "Aktiva användare",
+      "averageScore": "Genomsnittligt resultat",
+      "completedCourses": "Avslutade kurser"
+    },
+    "userTable": {
+      "title": "Användardata",
+      "searchUsers": "Sök användare...",
+      "export": "Exportera",
+      "columns": {
+        "user": "Användare",
+        "role": "Roll",
+        "location": "Plats",
+        "progress": "Framsteg",
+        "lastActive": "Senast aktiv"
+      }
+    }
+  },
+  "quiz": {
+    "progress": "Fråga {{current}} av {{total}}",
+    "score": "Poäng",
+    "submit": "Skicka svar",
+    "next": "Nästa fråga",
+    "complete": "Avsluta quiz",
+    "correct": "Rätt! 🎉",
+    "incorrect": "Inte riktigt rätt 🤔",
+    "correctAnswer": "Rätt svar var:",
+    "backToDashboard": "Tillbaka till kontrollpanelen"
+  }
+}

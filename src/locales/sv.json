@@ -1,0 +1,19 @@
+{
+  "auth": {
+    "welcomeBack": "Välkommen tillbaka!",
+    "createAccount": "Skapa konto",
+    "signInContinue": "Logga in för att fortsätta din inlärningsresa",
+    "joinToLearn": "Gå med oss för att börja lära dig",
+    "name": "Namn",
+    "fullName": "Fullständigt namn",
+    "emailAddress": "E-postadress",
+    "password": "Lösenord",
+    "adminLogin": "Administratörsinloggning",
+    "signIn": "Logga in",
+    "noAccount": "Har du inget konto? Registrera dig",
+    "haveAccount": "Har du redan ett konto? Logga in",
+    "continueWith": "Eller fortsätt med",
+    "invalidAdminCredentials": "Ogiltiga administratörsuppgifter",
+    "generalError": "Ett fel uppstod. Försök igen."
+  }
+}
