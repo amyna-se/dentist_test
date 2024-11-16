@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { User, UserRole } from '../types/user';
 import { Course } from '../pages/Dashboard';
 
+// Interface for authentication state
 interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
@@ -24,11 +25,13 @@ interface AuthState {
   updateCourseProgress: (courseId: string, progress: number) => void;
 }
 
+// Admin credentials for login
 const ADMIN_CREDENTIALS = {
   email: 'admin@neurostep.com',
   password: 'admin123'
 };
 
+// Zustand store for authentication
 export const useAuth = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -46,6 +49,7 @@ export const useAuth = create<AuthState>()(
       courses: [],
       isAdmin: false,
 
+      // Add user credentials to the store
       addUserCredentials: (email: string, password: string, role: UserRole) => {
         set(state => ({
           users: {
@@ -55,6 +59,7 @@ export const useAuth = create<AuthState>()(
         }));
       },
 
+      // Handle user login
       login: async (email: string, password: string) => {
         set({ loading: true, error: null });
         try {
@@ -115,6 +120,7 @@ export const useAuth = create<AuthState>()(
         }
       },
 
+      // Handle user registration
       register: async (email: string, password: string, name: string, role: UserRole = 'patient') => {
         set({ loading: true, error: null });
         try {
@@ -150,6 +156,7 @@ export const useAuth = create<AuthState>()(
         }
       },
 
+      // Handle user logout
       logout: () => {
         set({
           isAuthenticated: false,
@@ -159,6 +166,7 @@ export const useAuth = create<AuthState>()(
         });
       },
 
+      // Update course progress for a user
       updateCourseProgress: (courseId: string, progress: number) => {
         set(state => ({
           courseProgress: {

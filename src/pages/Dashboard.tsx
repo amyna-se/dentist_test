@@ -6,6 +6,7 @@ import { CourseEditor } from '../components/Admin/CourseEditor';
 import { UserSettings } from '../components/Dashboard/UserSettings';
 import { quizData } from '../data/quizData';
 
+// Interface for Course structure
 export interface Course {
   id: string;
   title: string;
@@ -15,6 +16,7 @@ export interface Course {
   category: string;
 }
 
+// Maps quiz data to Course objects
 const mapQuizDataToCourses = (): Course[] => {
   return Object.entries(quizData).map(([id, data]) => ({
     id,
@@ -26,6 +28,7 @@ const mapQuizDataToCourses = (): Course[] => {
   }));
 };
 
+// Determines icon based on course title
 const getIconForCategory = (title: string): JSX.Element => {
   if (title.toLowerCase().includes('autism')) {
     return <Brain className="w-8 h-8 text-blue-500" />;
@@ -38,6 +41,7 @@ const getIconForCategory = (title: string): JSX.Element => {
   }
 };
 
+// Determines category based on course title
 const getCategoryFromTitle = (title: string): string => {
   if (title.toLowerCase().includes('autism')) {
     return 'Autism';
@@ -57,6 +61,7 @@ export function Dashboard() {
   const [showCourseEditor, setShowCourseEditor] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
+  // Effect to update courses when user or courseProgress changes
   useEffect(() => {
     if (!user) {
       navigate('/auth');
@@ -71,10 +76,12 @@ export function Dashboard() {
     );
   }, [user, navigate, courseProgress]);
 
+  // Navigate to course quiz
   const handleStartCourse = (courseId: string) => {
     navigate(`/quiz/${courseId}`);
   };
 
+  // Navigate to onboarding
   const handleStartOnboarding = () => {
     navigate('/onboarding');
   };
