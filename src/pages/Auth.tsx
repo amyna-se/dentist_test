@@ -1,64 +1,87 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Brain, Mail, Lock, Github, User } from 'lucide-react';
-import { useAuth } from '../stores/auth';
-import { motion } from 'framer-motion';
+// Import necessary libraries and hooks
+import { useState } from 'react'; // React hook for managing state
+import { useNavigate } from 'react-router-dom'; // Hook for navigation
+import { Brain, Mail, Lock, User } from 'lucide-react'; // Icons for form inputs and UI
+import { useAuth } from '../stores/auth'; // Custom hook for authentication logic (login, register)
+import { motion } from 'framer-motion'; // Library for animations
 
+/**
+ * Auth Component:
+ * Handles user authentication (login and registration) with form validation and error handling.
+ */
 export function Auth() {
-  const navigate = useNavigate();
-  const { login, register, loading, error } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    name: '',
-  });
-  const [formError, setFormError] = useState('');
+  const navigate = useNavigate(); // Hook for programmatic navigation
+  const { login, register, loading, error } = useAuth(); // Authentication functions and state from `useAuth`
 
+  // State variables
+  const [isLogin, setIsLogin] = useState(true); // Toggles between login and registration
+  const [isAdmin, setIsAdmin] = useState(false); // Tracks if the login is for an admin user
+  const [formData, setFormData] = useState({
+    email: '', // Stores the user's email
+    password: '', // Stores the user's password
+    name: '', // Stores the user's name (only used during registration)
+  });
+  const [formError, setFormError] = useState(''); // Tracks form-specific errors
+
+  /**
+   * Handles form submission for login or registration.
+   * - Calls the appropriate function (`login` or `register`) based on `isLogin`.
+   * - Navigates to the appropriate dashboard on success.
+   * - Displays an error message if authentication fails.
+   */
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError('');
-    
+    e.preventDefault(); // Prevent form's default submission behavior
+    setFormError(''); // Reset form error state
+
     try {
       if (isLogin) {
+        // If logging in
         await login(formData.email, formData.password);
-        navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
+        navigate(isAdmin ? '/admin/dashboard' : '/dashboard'); // Navigate to admin or user dashboard
       } else {
+        // If registering
         await register(formData.email, formData.password, formData.name);
-        navigate('/dashboard');
+        navigate('/dashboard'); // Navigate to user dashboard
       }
     } catch (error) {
+      // Handle authentication errors
       setFormError(error instanceof Error ? error.message : 'Authentication failed');
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center p-4">
+      {/* Container for the form */}
       <div className="max-w-md w-full space-y-8 bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700">
+        {/* Header section */}
         <div className="text-center">
           <div className="flex justify-center">
-            <Brain className="h-12 w-12 text-neon-blue" />
+            <Brain className="h-12 w-12 text-neon-blue" /> {/* Brain icon for branding */}
           </div>
           <h2 className="mt-6 text-3xl font-bold text-white">
-            {isLogin ? 'Welcome Back!' : 'Create Account'}
+            {isLogin ? 'Welcome Back!' : 'Create Account'} {/* Dynamic title based on `isLogin` */}
           </h2>
           <p className="mt-2 text-sm text-gray-400">
-            {isLogin ? 'Sign in to continue your learning journey' : 'Join us to start learning'}
+            {isLogin
+              ? 'Sign in to continue your learning journey'
+              : 'Join us to start learning'}
           </p>
         </div>
 
+        {/* Error message section */}
         {(error || formError) && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-2 rounded-lg text-sm"
           >
-            {error || formError}
+            {error || formError} {/* Displays either global or form-specific errors */}
           </motion.div>
         )}
 
+        {/* Authentication Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {/* Name field (only visible during registration) */}
           {!isLogin && (
             <div>
               <label htmlFor="name" className="sr-only">Name</label>
@@ -70,16 +93,19 @@ export function Auth() {
                   id="name"
                   name="name"
                   type="text"
-                  required={!isLogin}
+                  required={!isLogin} // Required only during registration
                   className="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-neon-blue focus:border-transparent"
                   placeholder="Full Name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                 />
               </div>
             </div>
           )}
 
+          {/* Email field */}
           <div>
             <label htmlFor="email" className="sr-only">Email address</label>
             <div className="relative">
@@ -94,11 +120,14 @@ export function Auth() {
                 className="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-neon-blue focus:border-transparent"
                 placeholder="Email address"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
           </div>
 
+          {/* Password field */}
           <div>
             <label htmlFor="password" className="sr-only">Password</label>
             <div className="relative">
@@ -113,11 +142,14 @@ export function Auth() {
                 className="appearance-none rounded-lg relative block w-full pl-10 pr-3 py-2 border border-gray-700 bg-gray-900 placeholder-gray-500 text-white focus:outline-none focus:ring-2 focus:ring-neon-blue focus:border-transparent"
                 placeholder="Password"
                 value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
             </div>
           </div>
 
+          {/* Admin login toggle (only visible during login) */}
           {isLogin && (
             <div className="flex items-center">
               <input
@@ -128,12 +160,16 @@ export function Auth() {
                 onChange={(e) => setIsAdmin(e.target.checked)}
                 className="h-4 w-4 text-neon-purple focus:ring-neon-purple border-gray-700 rounded bg-gray-900"
               />
-              <label htmlFor="admin-login" className="ml-2 block text-sm text-gray-400">
+              <label
+                htmlFor="admin-login"
+                className="ml-2 block text-sm text-gray-400"
+              >
                 Admin Login
               </label>
             </div>
           )}
 
+          {/* Submit button */}
           <div>
             <button
               type="submit"
@@ -141,29 +177,33 @@ export function Auth() {
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-neon-blue hover:bg-neon-blue/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon-blue disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
+                // Loading spinner animation
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                   className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
                 />
               ) : (
-                isLogin ? 'Sign In' : 'Create Account'
+                isLogin ? 'Sign In' : 'Create Account' // Button text based on `isLogin`
               )}
             </button>
           </div>
 
+          {/* Toggle between login and registration */}
           <div className="flex items-center justify-center">
             <div className="text-sm">
               <button
                 type="button"
                 onClick={() => {
-                  setIsLogin(!isLogin);
-                  setFormError('');
-                  setIsAdmin(false);
+                  setIsLogin(!isLogin); // Toggle between login and registration
+                  setFormError(''); // Reset form errors
+                  setIsAdmin(false); // Reset admin state
                 }}
                 className="font-medium text-neon-blue hover:text-neon-blue/90"
               >
-                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                {isLogin
+                  ? "Don't have an account? Sign up"
+                  : "Already have an account? Sign in"}
               </button>
             </div>
           </div>
