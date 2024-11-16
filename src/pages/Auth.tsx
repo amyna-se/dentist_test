@@ -22,7 +22,7 @@ export function Auth() {
     
     try {
       if (isLogin) {
-        await login(formData.email, formData.password, isAdmin);
+        await login(formData.email, formData.password);
         navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
       } else {
         await register(formData.email, formData.password, formData.name);
