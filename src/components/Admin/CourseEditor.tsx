@@ -3,6 +3,7 @@ import { useState } from 'react'; // React hook for managing local state
 import { motion } from 'framer-motion'; // For animations and transitions
 import { Plus, Edit2, Save, X, ChevronDown, ChevronUp } from 'lucide-react'; // Icon components
 import { useCourses } from '../../stores/courses'; // Custom hook for managing course data
+import { QuestionEditor } from './QuestionEditor'; // Import QuestionEditor for editing individual questions
 
 /**
  * CourseEditor Component:
@@ -10,7 +11,7 @@ import { useCourses } from '../../stores/courses'; // Custom hook for managing c
  */
 export function CourseEditor() {
   // Access course-related actions and state from the `useCourses` store
-  const { courses, addCourse, updateCourse, assignCourseToAllUsers } = useCourses();
+  const { courses, addCourse, assignCourseToAllUsers } = useCourses();
 
   // State variables
   const [editingCourse, setEditingCourse] = useState<any | null>(null); // Tracks the course being edited or created
@@ -39,7 +40,7 @@ export function CourseEditor() {
   const handleSaveCourse = () => {
     if (editingCourse) {
       addCourse(editingCourse.id, editingCourse); // Add course to the global store
-      assignCourseToAllUsers(editingCourse.id, editingCourse); // Assign course to all users
+      assignCourseToAllUsers(editingCourse.id); // Assign course to all users by ID
       setEditingCourse(null); // Exit editing mode
     }
   };
@@ -52,33 +53,29 @@ export function CourseEditor() {
       const newQuestion = {
         id: `q-${Date.now()}`, // Unique ID for the question
         type: 'multiple-choice', // Default question type
-        question: 'New Question', // Placeholder question text
+        question: '', // Placeholder for question text
         options: ['Option 1', 'Option 2'], // Default options
         correctAnswer: 'Option 1', // Default correct answer
         emoji: '📝' // Default emoji
       };
-      setEditingQuestion(newQuestion); // Set the new question for editing
+
+      setEditingQuestion(newQuestion); // Open the QuestionEditor modal for a new question
     }
   };
 
   /**
-   * Saves the current question being edited.
-   * - Updates or adds the question to the course's question list.
+   * Saves an edited question back to the course.
+   * - Updates the course's questions array with the edited question.
    */
   const handleSaveQuestion = (question: any) => {
-    if (editingCourse) {
-      const updatedQuestions = editingQuestion
-        ? editingCourse.questions.map((q: any) =>
-            q.id === editingQuestion.id ? question : q
-          ) // Update existing question
-        : [...editingCourse.questions, question]; // Add new question
-
-      setEditingCourse({
-        ...editingCourse,
-        questions: updatedQuestions // Update course's questions
-      });
-      setEditingQuestion(null); // Exit question editing mode
-    }
+    const updatedQuestions = editingCourse.questions.map((q: any) =>
+      q.id === question.id ? question : q
+    );
+    setEditingCourse({
+      ...editingCourse,
+      questions: updatedQuestions,
+    });
+    setEditingQuestion(null); // Close the QuestionEditor modal
   };
 
   return (
@@ -113,46 +110,36 @@ export function CourseEditor() {
                 <h3 className="text-lg font-semibold text-white">{course.title}</h3>
                 <p className="text-gray-400">{course.description}</p>
               </div>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent click from toggling expansion
-                    setEditingCourse({
-                      ...course,
-                      id: courseId,
-                      questions: course.questions || []
-                    }); // Set course for editing
-                  }}
-                  className="p-2 rounded-lg bg-neon-blue/20 text-neon-blue hover:bg-neon-blue/30 transition"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-                {expandedCourse === courseId ? (
-                  <ChevronUp className="w-4 h-4 text-gray-400" /> // Expanded state icon
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-gray-400" /> // Collapsed state icon
-                )}
-              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent click from toggling expansion
+                  setEditingCourse(course); // Set course for editing
+                }}
+                className="p-2 rounded-lg bg-neon-blue/20 text-neon-blue hover:bg-neon-blue/30 transition"
+              >
+                <Edit2 className="w-4 h-4" />
+              </button>
             </div>
 
             {/* Expanded Course Details */}
             {expandedCourse === courseId && (
               <div className="p-4 border-t border-neon-blue/10">
                 <div className="space-y-2">
-                  {course.questions?.map((question: any, index: number) => (
+                  {course.questions.map((question: any, index: number) => (
                     <div
                       key={question.id}
                       className="flex items-center justify-between p-3 bg-dark rounded-lg"
                     >
                       <div>
                         <span className="text-gray-400">#{index + 1}</span>
-                        <span className="ml-2 text-white">
-                          {question.type === 'info'
-                            ? question.message // Info message
-                            : question.question} // Question text
-                        </span>
+                        <span className="ml-2 text-white">{question.question}</span>
                       </div>
-                      <div className="text-gray-400">{question.type}</div>
+                      <button
+                        onClick={() => setEditingQuestion(question)} // Open QuestionEditor with selected question
+                        className="p-2 rounded-lg bg-neon-blue/20 text-neon-blue hover:bg-neon-blue/30 transition"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -162,7 +149,7 @@ export function CourseEditor() {
         ))}
       </div>
 
-      {/* Course Editing Modal */}
+      {/* Editing Modal */}
       {editingCourse && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -189,7 +176,7 @@ export function CourseEditor() {
 
             {/* Course Form */}
             <div className="space-y-6">
-              {/* Course Title Input */}
+              {/* Title */}
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   Course Title
@@ -198,16 +185,13 @@ export function CourseEditor() {
                   type="text"
                   value={editingCourse.title}
                   onChange={(e) =>
-                    setEditingCourse({
-                      ...editingCourse,
-                      title: e.target.value
-                    })
+                    setEditingCourse({ ...editingCourse, title: e.target.value })
                   }
                   className="w-full px-4 py-2 rounded-lg bg-dark border border-neon-blue/10 text-white"
                 />
               </div>
 
-              {/* Course Description Input */}
+              {/* Description */}
               <div>
                 <label className="block text-sm font-medium text-gray-400 mb-2">
                   Description
@@ -217,7 +201,7 @@ export function CourseEditor() {
                   onChange={(e) =>
                     setEditingCourse({
                       ...editingCourse,
-                      description: e.target.value
+                      description: e.target.value,
                     })
                   }
                   className="w-full px-4 py-2 rounded-lg bg-dark border border-neon-blue/10 text-white"
@@ -225,7 +209,7 @@ export function CourseEditor() {
                 />
               </div>
 
-              {/* Questions Section */}
+              {/* Questions */}
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <label className="text-sm font-medium text-gray-400">
@@ -240,7 +224,6 @@ export function CourseEditor() {
                   </button>
                 </div>
 
-                {/* List of Questions */}
                 <div className="space-y-2">
                   {editingCourse.questions.map((question: any, index: number) => (
                     <div
@@ -249,14 +232,10 @@ export function CourseEditor() {
                     >
                       <div>
                         <span className="text-gray-400">#{index + 1}</span>
-                        <span className="ml-2 text-white">
-                          {question.type === 'info'
-                            ? question.message
-                            : question.question}
-                        </span>
+                        <span className="ml-2 text-white">{question.question}</span>
                       </div>
                       <button
-                        onClick={() => setEditingQuestion(question)}
+                        onClick={() => setEditingQuestion(question)} // Open QuestionEditor modal
                         className="p-2 rounded-lg bg-neon-blue/20 text-neon-blue hover:bg-neon-blue/30 transition"
                       >
                         <Edit2 className="w-4 h-4" />
@@ -266,7 +245,7 @@ export function CourseEditor() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
+              {/* Save and Cancel Buttons */}
               <div className="flex justify-end space-x-4">
                 <button
                   onClick={() => setEditingCourse(null)}
@@ -285,6 +264,15 @@ export function CourseEditor() {
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {/* QuestionEditor Modal */}
+      {editingQuestion && (
+        <QuestionEditor
+          question={editingQuestion}
+          onSave={handleSaveQuestion}
+          onCancel={() => setEditingQuestion(null)}
+        />
       )}
     </div>
   );

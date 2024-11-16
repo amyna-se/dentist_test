@@ -1,15 +1,15 @@
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState } from 'react'; // Import useState for local state management
+import { motion } from 'framer-motion'; // Import motion for animations
 
 interface TextInputQuestionProps {
-  question: string;
-  correctAnswer: string;
-  placeholder?: string;
-  caseSensitive?: boolean;
-  onAnswer: (answer: string) => void;
-  onNextQuestion: () => void;
-  isLastQuestion: boolean;
-  emoji?: string;
+  question: string; // The quiz question
+  correctAnswer: string; // The correct answer for validation
+  placeholder?: string; // Placeholder text for the input
+  caseSensitive?: boolean; // Whether the answer comparison is case-sensitive
+  onAnswer: (answer: string) => void; // Callback to handle user answer submission
+  onNextQuestion: () => void; // Callback to move to the next question
+  isLastQuestion: boolean; // Whether this is the last question
+  emoji?: string; // Emoji to represent the question type
 }
 
 export function TextInputQuestion({
@@ -20,24 +20,25 @@ export function TextInputQuestion({
   onAnswer,
   onNextQuestion,
   isLastQuestion,
-  emoji = '✍️'
+  emoji = '✍️',
 }: TextInputQuestionProps) {
-  const [input, setInput] = useState('');
-  const [submitted, setSubmitted] = useState(false);
+  const [input, setInput] = useState(''); // User input for the answer
+  const [submitted, setSubmitted] = useState(false); // Whether the answer has been submitted
+
+  // Determine if the submitted answer is correct
+  const isCorrect =
+    submitted &&
+    (caseSensitive
+      ? input === correctAnswer
+      : input.toLowerCase() === correctAnswer.toLowerCase());
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!submitted && input.trim()) {
-      setSubmitted(true);
-      onAnswer(input);
+      setSubmitted(true); // Mark the answer as submitted
+      onAnswer(input); // Pass the answer back to the parent component
     }
   };
-
-  const isCorrect = submitted && (
-    caseSensitive 
-      ? input === correctAnswer
-      : input.toLowerCase() === correctAnswer.toLowerCase()
-  );
 
   return (
     <div className="w-full max-w-2xl mx-auto">
@@ -81,17 +82,22 @@ export function TextInputQuestion({
 
           {submitted && (
             <div className="space-y-4">
-              <div className={`p-4 rounded-lg ${
-                isCorrect ? 'bg-neon-green/10' : 'bg-red-500/10'
-              }`}>
-                <p className={`font-bold ${
-                  isCorrect ? 'text-neon-green' : 'text-red-500'
-                }`}>
+              <div
+                className={`p-4 rounded-lg ${
+                  isCorrect ? 'bg-neon-green/10' : 'bg-red-500/10'
+                }`}
+              >
+                <p
+                  className={`font-bold ${
+                    isCorrect ? 'text-neon-green' : 'text-red-500'
+                  }`}
+                >
                   {isCorrect ? 'Correct! 🎉' : 'Not quite right 🤔'}
                 </p>
                 {!isCorrect && (
                   <p className="text-gray-400 mt-2">
-                    The correct answer was: <span className="text-neon-green">{correctAnswer}</span>
+                    The correct answer was:{' '}
+                    <span className="text-neon-green">{correctAnswer}</span>
                   </p>
                 )}
               </div>
