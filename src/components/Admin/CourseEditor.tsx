@@ -9,6 +9,7 @@ export function CourseEditor() {
   const [expandedCourse, setExpandedCourse] = useState<string | null>(null);
   const [editingQuestion, setEditingQuestion] = useState<any | null>(null);
 
+  // Handle adding a new course
   const handleAddCourse = () => {
     const newCourse = {
       id: `course-${Date.now()}`,
@@ -19,16 +20,16 @@ export function CourseEditor() {
     setEditingCourse(newCourse);
   };
 
+  // Handle saving a course
   const handleSaveCourse = () => {
     if (editingCourse) {
-      // Add or update course
       addCourse(editingCourse.id, editingCourse);
-      // Assign to all users
       assignCourseToAllUsers(editingCourse.id, editingCourse);
       setEditingCourse(null);
     }
   };
 
+  // Handle adding a new question
   const handleAddQuestion = () => {
     if (editingCourse) {
       const newQuestion = {
@@ -43,6 +44,7 @@ export function CourseEditor() {
     }
   };
 
+  // Handle saving a question
   const handleSaveQuestion = (question: any) => {
     if (editingCourse) {
       const updatedQuestions = editingQuestion 
@@ -89,8 +91,8 @@ export function CourseEditor() {
                   onClick={(e) => {
                     e.stopPropagation();
                     setEditingCourse({
-                      id: courseId,
                       ...course,
+                      id: courseId,
                       questions: course.questions || []
                     });
                   }}
