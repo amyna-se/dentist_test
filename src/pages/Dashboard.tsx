@@ -6,7 +6,7 @@ import { CourseEditor } from '../components/Admin/CourseEditor';
 import { UserSettings } from '../components/Dashboard/UserSettings';
 import { quizData } from '../data/quizData';
 
-interface Course {
+export interface Course {
   id: string;
   title: string;
   description: string;
@@ -63,13 +63,13 @@ export function Dashboard() {
       return;
     }
 
-    setCourses(prevCourses => 
+    setCourses(prevCourses =>
       prevCourses.map(course => ({
         ...course,
         progress: Math.round(courseProgress[course.id] || 0)
       }))
     );
-  }, [courseProgress, user, navigate]);
+  }, [user, navigate, courseProgress]);
 
   const handleStartCourse = (courseId: string) => {
     navigate(`/quiz/${courseId}`);
@@ -77,12 +77,6 @@ export function Dashboard() {
 
   const handleStartOnboarding = () => {
     navigate('/onboarding');
-  };
-
-  const stats = {
-    totalXP: userStats?.totalXP || 0,
-    coursesCompleted: userStats?.completedCourses || 0,
-    currentStreak: userStats?.currentStreak || 0
   };
 
   if (!user) {
@@ -133,7 +127,7 @@ export function Dashboard() {
               <h3 className="text-lg font-semibold text-white">Total XP</h3>
               <Trophy className="w-6 h-6 text-yellow-500" />
             </div>
-            <p className="text-2xl font-bold text-white mt-2">{stats.totalXP}</p>
+            <p className="text-2xl font-bold text-white mt-2">{userStats.totalXP}</p>
           </div>
 
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
@@ -141,7 +135,7 @@ export function Dashboard() {
               <h3 className="text-lg font-semibold text-white">Courses Completed</h3>
               <BookOpen className="w-6 h-6 text-green-500" />
             </div>
-            <p className="text-2xl font-bold text-white mt-2">{stats.coursesCompleted}</p>
+            <p className="text-2xl font-bold text-white mt-2">{userStats.completedCourses}</p>
           </div>
 
           <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
@@ -150,7 +144,7 @@ export function Dashboard() {
               <Star className="w-6 h-6 text-orange-500" />
             </div>
             <p className="text-2xl font-bold text-white mt-2">
-              {stats.currentStreak} days
+              {userStats.currentStreak} days
             </p>
           </div>
         </div>

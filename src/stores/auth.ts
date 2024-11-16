@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { User, UserRole } from '../types/user';
+import { Course } from '../pages/Dashboard';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -8,10 +9,19 @@ interface AuthState {
   error: string | null;
   loading: boolean;
   users: Record<string, { email: string; password: string; role: UserRole }>;
+  courseProgress: Record<string, number>;
+  userStats: {
+    totalXP: number;
+    completedCourses: number;
+    currentStreak: number;
+  };
+  courses: Course[];
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string, role?: UserRole) => Promise<void>;
   logout: () => void;
   addUserCredentials: (email: string, password: string, role: UserRole) => void;
+  updateCourseProgress: (courseId: string, progress: number) => void;
 }
 
 const ADMIN_CREDENTIALS = {
@@ -27,6 +37,14 @@ export const useAuth = create<AuthState>()(
       error: null,
       loading: false,
       users: {},
+      courseProgress: {},
+      userStats: {
+        totalXP: 0,
+        completedCourses: 0,
+        currentStreak: 0
+      },
+      courses: [],
+      isAdmin: false,
 
       addUserCredentials: (email: string, password: string, role: UserRole) => {
         set(state => ({
@@ -40,7 +58,6 @@ export const useAuth = create<AuthState>()(
       login: async (email: string, password: string) => {
         set({ loading: true, error: null });
         try {
-          // Check admin credentials
           if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
             const adminUser: User = {
               id: 'admin-1',
@@ -55,15 +72,14 @@ export const useAuth = create<AuthState>()(
                 progress: {}
               }
             };
-            set({ 
+            set({
               isAuthenticated: true,
               user: adminUser,
-              loading: false 
+              loading: false
             });
             return;
           }
 
-          // Check user credentials
           const userCreds = get().users[email];
           if (userCreds && userCreds.password === password) {
             const user: User = {
@@ -79,21 +95,21 @@ export const useAuth = create<AuthState>()(
                 progress: {}
               }
             };
-            set({ 
+            set({
               isAuthenticated: true,
               user,
-              loading: false 
+              loading: false
             });
             return;
           }
 
           throw new Error('Invalid credentials');
         } catch (error: any) {
-          set({ 
+          set({
             error: error.message || 'Authentication failed',
             loading: false,
             isAuthenticated: false,
-            user: null 
+            user: null
           });
           throw error;
         }
@@ -102,7 +118,6 @@ export const useAuth = create<AuthState>()(
       register: async (email: string, password: string, name: string, role: UserRole = 'patient') => {
         set({ loading: true, error: null });
         try {
-          // Add user credentials
           get().addUserCredentials(email, password, role);
 
           const user: User = {
@@ -118,18 +133,18 @@ export const useAuth = create<AuthState>()(
               progress: {}
             }
           };
-          
+
           set({
             isAuthenticated: true,
             user,
             loading: false
           });
         } catch (error: any) {
-          set({ 
+          set({
             error: error.message || 'Registration failed',
             loading: false,
             isAuthenticated: false,
-            user: null 
+            user: null
           });
           throw error;
         }
@@ -142,6 +157,22 @@ export const useAuth = create<AuthState>()(
           error: null,
           loading: false
         });
+      },
+
+      updateCourseProgress: (courseId: string, progress: number) => {
+        set(state => ({
+          courseProgress: {
+            ...state.courseProgress,
+            [courseId]: progress
+          },
+          userStats: {
+            ...state.userStats,
+            completedCourses: progress === 100
+              ? state.userStats.completedCourses + 1
+              : state.userStats.completedCourses,
+            totalXP: state.userStats.totalXP + Math.floor(progress / 10)
+          }
+        }));
       }
     }),
     {
@@ -149,7 +180,11 @@ export const useAuth = create<AuthState>()(
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
         user: state.user,
-        users: state.users
+        users: state.users,
+        courseProgress: state.courseProgress,
+        userStats: state.userStats,
+        courses: state.courses,
+        isAdmin: state.isAdmin
       })
     }
   )
