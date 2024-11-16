@@ -6,8 +6,7 @@ import './index.css';
 // Initialize i18n
 import './i18n';
 
-// Initialize Firebase
-import './lib/firebase';
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
