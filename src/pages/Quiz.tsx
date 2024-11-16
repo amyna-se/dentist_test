@@ -7,26 +7,25 @@ import { QuizComplete } from '../components/Quiz/QuizComplete';
 import { TextInputQuestion } from '../components/Quiz/TextInputQuestion';
 import { useAuth } from '../stores/auth';
 import { useQuiz } from '../stores/quiz';
+import { quizData, QuizQuestion } from '../data/quizData';
 
 export function Quiz() {
   const { courseId } = useParams<{ courseId: string }>();
   const navigate = useNavigate();
-  const { updateCourseProgress, courses } = useAuth();
+  const { updateCourseProgress } = useAuth();
   const { initQuiz, recordResponse } = useQuiz();
-  
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());
   const [showComplete, setShowComplete] = useState(false);
 
-  // Type guard for courseId
-  if (!courseId || !(courseId in courses)) {
-    navigate('/dashboard');
-    return null;
+  if (!courseId || !quizData[courseId]) {
+    return <div>Loading...</div>;
   }
 
-  const course = courses[courseId];
+  const course = quizData[courseId];
   const questions = course.questions;
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
@@ -38,7 +37,7 @@ export function Quiz() {
 
   const handleSelectAnswer = (answer: string) => {
     if (selectedAnswer !== null) return;
-    
+
     setSelectedAnswer(answer);
     const responseTime = Date.now() - questionStartTime;
     recordResponse(currentQuestion.id, responseTime);
@@ -50,7 +49,7 @@ export function Quiz() {
 
   const handleNextQuestion = () => {
     if (isLastQuestion) {
-      const totalQuestions = questions.filter(q => q.type !== 'info').length;
+      const totalQuestions = questions.filter((q: QuizQuestion) => q.type !== 'info').length;
       const progress = Math.round((score / totalQuestions) * 100);
       updateCourseProgress(courseId, progress);
       setShowComplete(true);
@@ -80,7 +79,7 @@ export function Quiz() {
         <div className="max-w-4xl mx-auto">
           <QuizComplete
             score={score}
-            totalQuestions={questions.filter(q => q.type !== 'info').length}
+            totalQuestions={questions.filter((q: QuizQuestion) => q.type !== 'info').length}
             onRetry={handleRetry}
           />
         </div>
@@ -104,14 +103,14 @@ export function Quiz() {
             Back to Dashboard
           </button>
         </div>
-        
+
         <AnimatePresence mode="wait">
           {currentQuestion.type === 'info' ? (
             <QuizCard
               key={currentQuestion.id}
               info={{
-                message: currentQuestion.message,
-                emoji: currentQuestion.emoji
+                message: currentQuestion.message || '',
+                emoji: currentQuestion.emoji || ''
               }}
               selectedAnswer={null}
               onSelectAnswer={() => {}}
@@ -121,8 +120,8 @@ export function Quiz() {
           ) : currentQuestion.type === 'text-input' ? (
             <TextInputQuestion
               key={currentQuestion.id}
-              question={currentQuestion.question}
-              correctAnswer={currentQuestion.correctAnswer}
+              question={currentQuestion.question || ''}
+              correctAnswer={currentQuestion.correctAnswer || ''}
               placeholder={currentQuestion.placeholder}
               caseSensitive={currentQuestion.caseSensitive}
               onAnswer={handleSelectAnswer}
